@@ -28,6 +28,7 @@ setInterval(() => {
 const API_KEY = process.env.API_KEY;
 app.use((req, res, next) => {
   if (req.path === '/' || req.path === '/auth/login') return next();
+  if (req.method === 'GET' && req.path === '/students') return next();
   const token = req.headers['x-session-token'];
   const key = req.headers['x-api-key'];
   if (token) {
