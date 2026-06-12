@@ -152,4 +152,3 @@
   }
   requestAnimationFrame(tick);
 })();
-</script>
