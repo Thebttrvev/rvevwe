@@ -2475,4 +2475,3 @@ Object.assign(window, {
   adminToggle, updateStats, showStudentScreen, showTeacherScreen, applyTeacherMode,
   initFriendsPage, swipeCard, showMatch, closeMatchView, openMatchChat, sendChatMessage, closeChatView, endChat
 });
-</script>
