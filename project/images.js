@@ -3,4 +3,3 @@ var O="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAts0l
 document.querySelectorAll('img[src="__REAL_LOGO__"]').forEach(function(el){el.src=R;});
 document.querySelectorAll('img[src="__ORIG_LOGO__"]').forEach(function(el){el.src=O;});
 })();
-</script>
