@@ -11,13 +11,59 @@ const wss = new WebSocketServer({ server });
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 
-// ── API Key middleware ──
+// ── Session Token Store (in-memory) ──
+const activeSessions = new Map();
+
+function generateToken() {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, session] of activeSessions) {
+    if (session.expires < now) activeSessions.delete(token);
+  }
+}, 60000);
+
+// ── Auth middleware ──
 const API_KEY = process.env.API_KEY;
 app.use((req, res, next) => {
-  if (req.path === '/') return next(); // health check ผ่านได้
+  if (req.path === '/' || req.path === '/auth/login') return next();
+  const token = req.headers['x-session-token'];
   const key = req.headers['x-api-key'];
+  if (token) {
+    const session = activeSessions.get(token);
+    if (session && session.expires > Date.now()) { req.session = session; return next(); }
+    return res.status(401).json({ error: 'session expired' });
+  }
   if (!API_KEY || key === API_KEY) return next();
   res.status(401).json({ error: 'unauthorized' });
+});
+
+// ── Auth Login ──
+app.post('/auth/login', async (req, res) => {
+  try {
+    const { role, password, studentId } = req.body;
+    const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
+    const TEACHER_PIN = process.env.TEACHER_PIN || '5678';
+    if (role === 'admin') {
+      if (password !== ADMIN_PIN) return res.status(401).json({ error: 'wrong password' });
+    } else if (role === 'teacher') {
+      if (password !== TEACHER_PIN) return res.status(401).json({ error: 'wrong password' });
+    } else if (role === 'student') {
+      const raw = await redis.get('rev_students');
+      const data = raw ? (typeof raw === 'string' ? JSON.parse(raw) : raw) : {};
+      const student = Object.values(data).find(s => String(s.id) === String(studentId));
+      if (!student) return res.status(401).json({ error: 'not found' });
+      if (student.pin !== password) return res.status(401).json({ error: 'wrong password' });
+    } else {
+      return res.status(400).json({ error: 'invalid role' });
+    }
+    const token = generateToken();
+    activeSessions.set(token, { role, studentId: studentId || null, expires: Date.now() + 24 * 60 * 60 * 1000 });
+    res.json({ ok: true, token });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // ── Upstash Redis ──
