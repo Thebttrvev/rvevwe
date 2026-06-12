@@ -24,8 +24,8 @@ async function api(method, path, body) {
   if (res.status === 401) {
     setToken(null);
     clearSession();
-    showScreen('login-screen');
-    throw new Error('session expired');
+    if (typeof showScreen === 'function') showScreen('login-screen');
+    return null;
   }
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -130,6 +130,10 @@ wsOn('settings', (data) => {
 // Fetch on load
 (async function initLoad() {
   try {
+    if (!_sessionToken) {
+      if (!_sessionRestored) { _sessionRestored = true; setTimeout(() => restoreSession(), 200); }
+      return;
+    }
     const [studData, settData] = await Promise.all([
       api('GET', '/students'),
       api('GET', '/settings'),
