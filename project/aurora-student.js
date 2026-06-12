@@ -1,3 +1,4 @@
+/*
    STUDENT SCREEN AURORA — same ribbon effect as login
 ═══════════════════════════════════════════════════ */
 (function(){
