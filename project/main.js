@@ -22,9 +22,11 @@ async function api(method, path, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
   if (res.status === 401) {
-    setToken(null);
-    clearSession();
-    if (typeof showScreen === 'function') showScreen('login-screen');
+    if (_sessionToken) {
+      setToken(null);
+      clearSession();
+      if (typeof showScreen === 'function') showScreen('login-screen');
+    }
     return null;
   }
   if (!res.ok) throw new Error(await res.text());
@@ -130,21 +132,18 @@ wsOn('settings', (data) => {
 // Fetch on load
 (async function initLoad() {
   try {
-    if (!_sessionToken) {
-      if (!_sessionRestored) { _sessionRestored = true; setTimeout(() => restoreSession(), 200); }
-      return;
-    }
-    const [studData, settData] = await Promise.all([
-      api('GET', '/students'),
-      api('GET', '/settings'),
-    ]);
+    const studData = await api('GET', '/students');
     students = studData ? Object.values(studData) : [];
     const bar = document.getElementById('splash-bar');
     if (bar) bar.style.width = '100%';
     if (!_sessionRestored) { _sessionRestored = true; setTimeout(() => restoreSession(), 200); }
-    if (settData && Object.keys(settData).length) {
-      settings = settData;
-      updateDeadlineBanners?.();
+
+    if (_sessionToken) {
+      const settData = await api('GET', '/settings');
+      if (settData && Object.keys(settData).length) {
+        settings = settData;
+        updateDeadlineBanners?.();
+      }
     }
   } catch (e) { console.warn('initLoad error:', e.message); }
 })();
