@@ -413,10 +413,23 @@ function sDoLogin() {
     document.getElementById('login-err').textContent = '✗ PIN ไม่ถูกต้อง';
     sPinVal=''; updatePinDots('s',sPinVal,'cyan'); return;
   }
-  currentRole = 'student';
-  currentStudent = student;
-  saveSession('student', student.id);
-  showStudentScreen();
+  fetch(API_BASE + '/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ role: 'student', password: sPinVal, studentId: student.id })
+  }).then(r => r.json()).then(data => {
+    if (!data.ok) {
+      document.getElementById('login-err').textContent = '✗ PIN ไม่ถูกต้อง';
+      sPinVal=''; updatePinDots('s',sPinVal,'cyan'); return;
+    }
+    setToken(data.token);
+    currentRole = 'student';
+    currentStudent = student;
+    saveSession('student', student.id);
+    showStudentScreen();
+  }).catch(() => {
+    document.getElementById('login-err').textContent = '✗ เชื่อมต่อ server ไม่ได้';
+  });
 }
 
 /* ══ REGISTER ══ */
