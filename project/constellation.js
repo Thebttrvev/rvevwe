@@ -1,3 +1,4 @@
+/*
    STUDENT SCREEN — CONSTELLATION + TRIANGLES + STARS
    (same effect as login screen)
 ═══════════════════════════════════════════════════ */
