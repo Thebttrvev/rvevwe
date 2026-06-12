@@ -272,4 +272,3 @@
     setTimeout(function(){ snapToPage(page); }, 300);
   };
 })();
-</script>
