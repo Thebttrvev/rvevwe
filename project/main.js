@@ -1,5 +1,5 @@
 /* ══ BACKEND CONFIG ══ */
-const API_BASE = (typeof window !== 'undefined' && window.API_BASE) || 'https://YOUR-APP.onrender.com';
+const API_BASE = (typeof window !== 'undefined' && window.API_BASE) || 'https://rvevwe-backend.onrender.com';
 const WS_URL  = API_BASE.replace(/^http/, 'ws');
 
 // ── Session Token ──
