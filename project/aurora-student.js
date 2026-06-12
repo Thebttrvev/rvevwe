@@ -87,4 +87,3 @@
   }
   requestAnimationFrame(tick);
 })();
-</script>
