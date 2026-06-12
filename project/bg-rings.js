@@ -1,3 +1,4 @@
+(function(){
   var cvs = document.getElementById('bg-rings-canvas');
   var ctx = cvs.getContext('2d');
   var W, H;
