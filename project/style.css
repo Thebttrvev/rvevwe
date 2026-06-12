@@ -1,3 +1,5 @@
+
+
 :root {
   --pink: #D4789A;
   --pink-light: #E8A0B8;
@@ -1514,9 +1516,8 @@ body{overflow:hidden!important;}
   .inp-wrap{ margin-bottom:10px!important; }
   .divider{ margin:10px 0!important; }
 }
-</style>
 
-/* ── component inline styles ── */
+
         .s-dot{animation:sDotPulse 3s ease-in-out infinite;}
         .s-dot:nth-child(2n){animation-delay:-1.2s;}
         .s-dot:nth-child(3n){animation-delay:-2.1s;}
@@ -1533,8 +1534,8 @@ body{overflow:hidden!important;}
         .s-tri:nth-child(4n){animation-delay:-1s;animation-duration:9s;}
         .s-tri:nth-child(5n){animation-delay:-3s;animation-duration:5s;}
         @keyframes sTriFloat{0%,100%{opacity:0.06;transform:translateY(0) rotate(0deg);}50%{opacity:0.22;transform:translateY(-12px) rotate(8deg);}}
+      
 
-/* ── component inline styles ── */
   /* ── BP v3 styles ── */
   #page-battlepass {
     background: linear-gradient(180deg, #14090e 0%, #100c10 100%);
@@ -1771,3 +1772,4 @@ body{overflow:hidden!important;}
     font-size:13px; color:rgba(210,140,170,0.75); letter-spacing:3px;
     text-transform:uppercase; margin-bottom:14px; font-weight:700;
   }
+  
