@@ -377,6 +377,17 @@ function smartLogin() {
   }
 
   // User login
+  if (students.length === 0) {
+    document.getElementById('login-err').textContent = '⏳ กำลังโหลดข้อมูล กรุณารอสักครู่...';
+    api('GET', '/students').then(data => {
+      if (data) students = Object.values(data);
+      document.getElementById('login-err').textContent = '';
+      smartLogin();
+    }).catch(() => {
+      document.getElementById('login-err').textContent = '✗ เชื่อมต่อ server ไม่ได้';
+    });
+    return;
+  }
   const found = students.find(s => s.name === name);
   if (!found) { document.getElementById('login-err').textContent = '✗ ไม่พบ Username นี้ — กรุณาสมัครก่อน'; return; }
   fetch(API_BASE + '/auth/login', {
